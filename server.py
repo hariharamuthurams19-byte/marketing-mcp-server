@@ -1,19 +1,29 @@
-from mcp.server.fastapi import create_mcp_app
-from mcp.server.tool import Tool
+from fastapi import FastAPI
 
-def ab_test_analyzer(headline_a: str, headline_b: str) -> str:
-    return f"Compared '{headline_a}' vs '{headline_b}'. Variant B performs better."
+app = FastAPI()
 
-tools = [
-    Tool.from_function(
-        func=ab_test_analyzer,
-        name="ab-test-analyzer",
-        description="Analyze A/B test performance data"
-    )
-]
+@app.get("/")
+def root():
+    return {"server": "Marketing MCP Server"}
 
-app = create_mcp_app(
-    name="Marketing MCP Server",
-    version="1.0.0",
-    tools=tools
-)
+@app.get("/.well-known/mcp.json")
+def mcp_manifest():
+    return {
+        "schema_version": "1.0",
+        "name": "Marketing MCP Server",
+        "description": "Marketing tools for analytics and audits",
+        "tools": [
+            {
+                "name": "ab-test-analyzer",
+                "description": "Analyze A/B test performance data",
+                "input_schema": {
+                    "type": "object",
+                    "properties": {
+                        "headline_a": {"type": "string"},
+                        "headline_b": {"type": "string"}
+                    },
+                    "required": ["headline_a", "headline_b"]
+                }
+            }
+        ]
+    }
