@@ -1,15 +1,14 @@
-from mcp.server.fastapi import create_mcp_app
-from mcp.server import Server
+from mcp.server import FastMCP
 
 # Create MCP server
-server = Server(
+mcp = FastMCP(
     name="Marketing MCP Server",
-    description="Marketing tools for analytics and audits"
+    description="Marketing tools for analytics and audits",
 )
 
 # Define tool
-@server.tool()
-async def ab_test_analyzer(headline_a: str, headline_b: str) -> dict:
+@mcp.tool()
+async def ab_test_analyzer(headline_a: str, headline_b: str):
     """
     Analyze A/B test headlines.
     """
@@ -19,5 +18,5 @@ async def ab_test_analyzer(headline_a: str, headline_b: str) -> dict:
         "analysis": f"Comparing '{headline_a}' vs '{headline_b}'."
     }
 
-# Create FastAPI app
-app = create_mcp_app(server)
+# This exposes FastAPI app for Render
+app = mcp.app
