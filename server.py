@@ -1,10 +1,7 @@
 from mcp.server import FastMCP
 
 # Create MCP server
-mcp = FastMCP(
-    name="Marketing MCP Server",
-    description="Marketing tools for analytics and audits",
-)
+mcp = FastMCP("Marketing MCP Server")
 
 # Define tool
 @mcp.tool()
